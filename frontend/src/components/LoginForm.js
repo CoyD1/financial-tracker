@@ -1,17 +1,48 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login:", { email, password });
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8001/api/auth/token/login/",
+        {
+          email: email,
+          password: password,
+        }
+      );
+
+      // Сохраняем токен для будущих запросов
+      localStorage.setItem("auth_token", response.data.auth_token);
+      console.log("Успешный вход, токен сохранен");
+
+      // Переход на главную страницу (временно alert)
+      alert("Добро пожаловать! Вы успешно вошли в систему.");
+    } catch (err) {
+      console.error("Ошибка входа:", err);
+
+      if (err.response?.status === 400) {
+        setError("Неверный email или пароль");
+      } else {
+        setError("Ошибка соединения с сервером");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">Вход</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">Вход в систему</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Email</label>
@@ -21,6 +52,8 @@ const LoginForm = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
             required
+            disabled={loading}
+            placeholder="Введите ваш email"
           />
         </div>
         <div className="mb-6">
@@ -31,15 +64,34 @@ const LoginForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
             required
+            disabled={loading}
+            placeholder="Введите ваш пароль"
           />
         </div>
+
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 disabled:bg-blue-300"
+          disabled={loading}
         >
-          Войти
+          {loading ? "Выполняется вход..." : "Войти"}
         </button>
       </form>
+
+      <div className="mt-4 text-center text-sm text-gray-600">
+        <p>
+          Нет аккаунта?{" "}
+          <span className="text-blue-600 cursor-pointer">
+            Зарегистрироваться
+          </span>
+        </p>
+      </div>
     </div>
   );
 };
