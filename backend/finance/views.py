@@ -15,10 +15,10 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
     
-    def preform_create(self, serializer):
+    def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class USerSavingGoalViewSet(viewsets.ModelViewSet):
+class UserSavingGoalViewSet(viewsets.ModelViewSet):
     serializer_class = UserSavingGoalSerializer
     permission_classes = [permissions.IsAuthenticated]
 

@@ -5,7 +5,7 @@ from . import views
 router = DefaultRouter()
 router.register(r'categories', views.CategoryViewSet)
 router.register(r'transactions', views.TransactionViewSet, basename='transaction')
-router.register(r'saving-goals', views.USerSavingGoalViewSet, basename='savingoal')
+router.register(r'saving-goals', views.UserSavingGoalViewSet, basename='savingoal')
 
 urlpatterns = [
     path('', include(router.urls))
