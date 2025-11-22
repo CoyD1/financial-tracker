@@ -17,3 +17,4 @@ class UserSavingGoalSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSavingGoal
         fields = '__all__'
+

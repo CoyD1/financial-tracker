@@ -14,23 +14,18 @@ from pathlib import Path
 from decouple import config
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+#базовая директория проекта
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
+#секретный ключ для безопасности,объязательно храним в .env
 SECRET_KEY = config('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+#режим отладки
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Application definition
-
+#общий список встроенных джанго приложений,сторонних приложений,локальных приложений
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,13 +36,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'djoser',
+    'djoser', #DJOSER библиотека для drf
     'finance',
     'users',
 ]
 
 AUTH_USER_MODEL = 'users.User'
 
+#Список MIDDLEWARE для обработки запросов
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.security.SecurityMiddleware',
@@ -59,8 +55,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+#Корневой url файл проекта
 ROOT_URLCONF = 'config.urls'
 
+#конфигурация шаблонов джанго
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -79,9 +77,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+#конфигурация бд
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -94,9 +90,7 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+#валидаторы паролей
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -113,21 +107,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+#настройка интернациональности,язык в админке
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+#статические файлы
 STATIC_URL = 'static/'
 
 # Default primary key field type
@@ -159,7 +146,7 @@ DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SERIALIZERS': {
-        'user_create': 'users.serializers.UserCreateSerializer',
-        'user': 'users.serializers.UserSerializer',
+        'user_create': 'users.serializers.UserCreateSerializer', # для регистрации
+        'user': 'users.serializers.UserSerializer',# для получения пользователя
     }
 }
