@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+import api from "../services/api"; //Импортируем настройку axios
 
-const LoginForm = () => {
+const LoginForm = ({onLogin}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,20 +16,23 @@ const LoginForm = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/auth/token/login/",
-        {
-          email: email,
-          password: password,
-        }
-      );
+      //ИСПОЛЬЗУЕМ API ВМЕСТО AXIOS
+      const response = await api.post("/auth/token/login/", {
+        email: email,
+        password: password,
+      });
 
-      // Сохраняем токен для будущих запросов
+      //сохраняем токен
       localStorage.setItem("auth_token", response.data.auth_token);
       console.log("Успешный вход, токен сохранен");
 
-      // Переход на главную страницу (временно alert)
-      alert("Добро пожаловать! Вы успешно вошли в систему.");
+      //теперь все будущие запросы через `api` будут содержать токен в заголовках
+      if (onLogin){
+        onLogin();
+      }
+
+      navigate('/dashboard');
+
     } catch (err) {
       console.error("Ошибка входа:", err);
 
