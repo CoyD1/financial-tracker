@@ -1,0 +1,157 @@
+# Financial Tracker API
+
+Полный набор запросов для управления личными финансами.
+
+## 📋 Что включено:
+- Аутентификация пользователей - регистрация и вход
+- Управление профилем - данные пользователя
+- Финансовые операции - создание, чтение, обновление и удаление транзакций
+- Управление категориями транзакций
+
+## 🔑 Аутентификация: SimpleJWT (JSON Web Token)
+## ⚙️ Переменные окружения: base_url, access_token, refresh_token
+
+## Quick Start
+
+```bash
+python manage.py migrate
+python manage.py runserver
+```
+
+## Authentication
+
+### User Registration (Djoser)
+```http
+POST http://localhost:8000/api/auth/users/
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "username": "user@example.com",
+  "password": "password123",
+  "re_password": "password123",
+  "first_name": "John",
+  "last_name": "Doe"
+}
+```
+
+### User Login (Get JWT Tokens)
+```http
+POST http://localhost:8000/api/auth/jwt/create/
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+Response:
+```json
+{
+  "access": "eyJ0eXAi...",
+  "refresh": "eyJ0eXAi..."
+}
+```
+
+### Token Refreshing
+Чтобы получить новый `access` токен (если старый истек):
+```http
+POST http://localhost:8000/api/auth/jwt/refresh/
+Content-Type: application/json
+
+{
+  "refresh": "your_refresh_token_here"
+}
+```
+
+### Using JWT Token
+Добавьте заголовок к защищенным запросам:
+```
+Authorization: Bearer your_access_token_here
+Content-Type: application/json
+```
+
+## Users
+
+### Get User Profile
+```http
+GET http://localhost:8000/api/auth/users/me/
+Authorization: Bearer your_access_token_here
+```
+
+### Update User Profile
+```http
+PUT http://localhost:8000/api/auth/users/me/
+Authorization: Bearer your_access_token_here
+Content-Type: application/json
+
+{
+    "first_name": "Updated John",
+    "last_name": "Updated Doe",
+    "email": "updated@example.com",
+    "username": "updated@example.com"
+}
+```
+
+## Transactions
+
+### Create Transaction
+```http
+POST http://localhost:8000/api/transactions/
+Authorization: Bearer your_access_token_here
+Content-Type: application/json
+
+{
+  "amount": "150.75",
+  "type": "EX",
+  "category": 1,
+  "date": "2024-01-15",
+  "description": "Weekly groceries"
+}
+```
+
+### Get Transactions List
+```http
+GET http://localhost:8000/api/transactions/
+Authorization: Bearer your_access_token_here
+```
+
+### Update Transaction
+```http
+PUT http://localhost:8000/api/transactions/1/
+Authorization: Bearer your_access_token_here
+Content-Type: application/json
+
+{
+  "amount": "200.00",
+  "type": "EX",
+  "category": 1,
+  "date": "2024-01-15",
+  "description": "Updated description"
+}
+```
+
+### Delete Transaction
+```http
+DELETE http://localhost:8000/api/transactions/1/
+Authorization: Bearer your_access_token_here
+```
+
+## Categories
+
+### Create Category
+```http
+POST http://localhost:8000/api/categories/
+Authorization: Bearer your_access_token_here
+Content-Type: application/json
+
+{
+    "name": "Зарплата", 
+    "type": "IN"
+}
+```
+
+## Postman Collection
+[Ссылка на Postman коллекцию](https://pasha-w790-1314673.postman.co/workspace/7c0f8575-0c1b-4699-8218-294c2f50b949/collection/47389242-7c93df5a-ddf3-4ede-8be0-4ecc33bb0312?action=share&source=copy-link&creator=47389242)
+
