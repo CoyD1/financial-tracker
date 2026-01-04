@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import api from "../services/api"; //Импортируем настройку axios
 
-const LoginForm = ({onLogin}) => {
+const LoginForm = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,18 +16,20 @@ const LoginForm = ({onLogin}) => {
     setError("");
 
     try {
-      //ИСПОЛЬЗУЕМ API ВМЕСТО AXIOS
-      const response = await api.post("/auth/token/login/", {
+      // ИСПОЛЬЗУЕМ JWT ЭНДПОИНТ
+      const response = await api.post("/auth/jwt/create/", {
         email: email,
         password: password,
       });
 
-      //сохраняем токен
-      localStorage.setItem("auth_token", response.data.auth_token);
-      console.log("Успешный вход, токен сохранен");
+      // сохраняем токены
+      const { access, refresh } = response.data;
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+      console.log("Успешный вход, JWT токены сохранены");
 
       //теперь все будущие запросы через `api` будут содержать токен в заголовках
-      if (onLogin){
+      if (onLogin) {
         onLogin();
       }
 

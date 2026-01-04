@@ -10,8 +10,8 @@ function App() {
     const [loading, setLoading] = useState(true);
 
     //проверяем авторизацию при загрузке приложения
-    useEffect (() =>{
-        const token = localStorage.getItem('auth_token');
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
         setIsAuthenticated(!!token);
         setLoading(false);
     }, []);
@@ -23,10 +23,11 @@ function App() {
 
     //функция для выхода
     const handleLogout = () => {
-        localStorage.removeItem('auth_token');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
         setIsAuthenticated(false);
     };
-    if (loading){
+    if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="text-lg">Загрузка...</div>
@@ -45,9 +46,9 @@ function App() {
                         <Route
                             path="/"
                             element={
-                            isAuthenticated ?
-                                <Navigate to="/dashboard" replace />:
-                                <Navigate to="/login" replace />
+                                isAuthenticated ?
+                                    <Navigate to="/dashboard" replace /> :
+                                    <Navigate to="/login" replace />
                             }
                         />
 
