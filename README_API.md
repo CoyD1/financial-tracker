@@ -8,8 +8,8 @@
 - Финансовые операции - создание, чтение, обновление и удаление транзакций
 - Управление категориями транзакций
 
-## 🔑 Аутентификация: Token-based
-## ⚙️ Переменные окружения: base_url, token
+## 🔑 Аутентификация: SimpleJWT (JSON Web Token)
+## ⚙️ Переменные окружения: base_url, access_token, refresh_token
 
 ## Quick Start
 
@@ -20,7 +20,7 @@ python manage.py runserver
 
 ## Authentication
 
-### User Registration
+### User Registration (Djoser)
 ```http
 POST http://localhost:8000/api/auth/users/
 Content-Type: application/json
@@ -35,9 +35,9 @@ Content-Type: application/json
 }
 ```
 
-### User Login
+### User Login (Get JWT Tokens)
 ```http
-POST http://localhost:8000/api/auth/token/login/
+POST http://localhost:8000/api/auth/jwt/create/
 Content-Type: application/json
 
 {
@@ -49,20 +49,26 @@ Content-Type: application/json
 Response:
 ```json
 {
-  "auth_token": "your_token_here"
+  "access": "eyJ0eXAi...",
+  "refresh": "eyJ0eXAi..."
 }
 ```
 
-### User Logout
+### Token Refreshing
+Чтобы получить новый `access` токен (если старый истек):
 ```http
-POST http://localhost:8000/api/auth/token/logout/
-Authorization: Token your_token_here
+POST http://localhost:8000/api/auth/jwt/refresh/
+Content-Type: application/json
+
+{
+  "refresh": "your_refresh_token_here"
+}
 ```
 
-### Using Token
-Add to headers:
+### Using JWT Token
+Добавьте заголовок к защищенным запросам:
 ```
-Authorization: Token your_token_here
+Authorization: Bearer your_access_token_here
 Content-Type: application/json
 ```
 
@@ -71,13 +77,13 @@ Content-Type: application/json
 ### Get User Profile
 ```http
 GET http://localhost:8000/api/auth/users/me/
-Authorization: Token your_token_here
+Authorization: Bearer your_access_token_here
 ```
 
 ### Update User Profile
 ```http
 PUT http://localhost:8000/api/auth/users/me/
-Authorization: Token your_token_here
+Authorization: Bearer your_access_token_here
 Content-Type: application/json
 
 {
@@ -93,7 +99,7 @@ Content-Type: application/json
 ### Create Transaction
 ```http
 POST http://localhost:8000/api/transactions/
-Authorization: Token your_token_here
+Authorization: Bearer your_access_token_here
 Content-Type: application/json
 
 {
@@ -108,13 +114,13 @@ Content-Type: application/json
 ### Get Transactions List
 ```http
 GET http://localhost:8000/api/transactions/
-Authorization: Token your_token_here
+Authorization: Bearer your_access_token_here
 ```
 
 ### Update Transaction
 ```http
 PUT http://localhost:8000/api/transactions/1/
-Authorization: Token your_token_here
+Authorization: Bearer your_access_token_here
 Content-Type: application/json
 
 {
@@ -129,7 +135,7 @@ Content-Type: application/json
 ### Delete Transaction
 ```http
 DELETE http://localhost:8000/api/transactions/1/
-Authorization: Token your_token_here
+Authorization: Bearer your_access_token_here
 ```
 
 ## Categories
@@ -137,7 +143,7 @@ Authorization: Token your_token_here
 ### Create Category
 ```http
 POST http://localhost:8000/api/categories/
-Authorization: Token your_token_here
+Authorization: Bearer your_access_token_here
 Content-Type: application/json
 
 {
