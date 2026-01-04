@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import api from "../services/api"; //Импортируем настройку axios
 
 const LoginForm = ({ onLogin }) => {
@@ -9,6 +9,8 @@ const LoginForm = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const successMessage = location.state?.message;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +40,7 @@ const LoginForm = ({ onLogin }) => {
     } catch (err) {
       console.error("Ошибка входа:", err);
 
-      if (err.response?.status === 400) {
+      if (err.response?.status === 401 || err.response?.status === 400) {
         setError("Неверный email или пароль");
       } else {
         setError("Ошибка соединения с сервером");
@@ -52,6 +54,11 @@ const LoginForm = ({ onLogin }) => {
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-center">Вход в систему</h2>
       <form onSubmit={handleSubmit}>
+        {successMessage && (
+          <div className="mb-4 p-2 bg-green-100 text-green-700 rounded text-center">
+            {successMessage}
+          </div>
+        )}
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Email</label>
           <input
@@ -95,9 +102,9 @@ const LoginForm = ({ onLogin }) => {
       <div className="mt-4 text-center text-sm text-gray-600">
         <p>
           Нет аккаунта?{" "}
-          <span className="text-blue-600 cursor-pointer">
+          <Link to="/register" className="text-blue-600 hover:underline">
             Зарегистрироваться
-          </span>
+          </Link>
         </p>
       </div>
     </div>
