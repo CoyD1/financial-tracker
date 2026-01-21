@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from decouple import config
 
 
 def main():
@@ -18,5 +19,10 @@ def main():
     execute_from_command_line(sys.argv)
 
 
-if __name__ == '__main__':
-    main()
+# Получаем порт из .env файла, если не указан, то по умолчанию 8000
+port = config('DJANGO_PORT', default=8000)
+
+if __name__ == "__main__":
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+    from django.core.management import execute_from_command_line
+    execute_from_command_line(["manage.py", "runserver", f"127.0.0.1:{port}"])
