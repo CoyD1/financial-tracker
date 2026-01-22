@@ -16,5 +16,5 @@ class TransactionSerializer(serializers.ModelSerializer):
 class UserSavingGoalSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSavingGoal
-        fields = '__all__'
+        fields = ['id', 'title', 'description', 'target_amount', 'current_saved', 'is_active', 'created_at']
 
