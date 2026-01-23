@@ -36,3 +36,23 @@ class UserSavingGoal(models.Model):
 
     def __str__(self):
         return f"{self.user.email}: {self.title}"
+    
+class SavingScenario(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="saving_scenarios"
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE
+    )
+    target_percent = models.PositiveIntegerField(
+        help_text="Процент сокращения расходов"
+    )
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} – {self.category.name} ({self.target_percent}%)"
+

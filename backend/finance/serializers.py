@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Transaction, UserSavingGoal
+from .models import Category, Transaction, UserSavingGoal, SavingScenario
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,4 +17,18 @@ class UserSavingGoalSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSavingGoal
         fields = ['id', 'title', 'description', 'target_amount', 'current_saved', 'is_active', 'created_at']
+
+class SavingScenarioSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source="category.name", read_only=True)
+
+    class Meta:
+        model = SavingScenario
+        fields = [
+            "id",
+            "category",
+            "category_name",
+            "target_percent",
+            "is_active",
+            "created_at",
+        ]
 

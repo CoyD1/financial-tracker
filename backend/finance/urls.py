@@ -6,6 +6,7 @@ router = DefaultRouter()
 router.register(r'categories', views.CategoryViewSet)
 router.register(r'transactions', views.TransactionViewSet, basename='transaction')
 router.register(r'saving-goals', views.UserSavingGoalViewSet, basename='savingoal')
+router.register(r'saving-scenarios', views.SavingScenarioViewSet, basename='saving-scenarios')
 
 urlpatterns = [
     path('', include(router.urls)),

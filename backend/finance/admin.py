@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Transaction, UserSavingGoal
+from .models import Category, Transaction, UserSavingGoal, SavingScenario
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -15,3 +15,9 @@ class TransactionAdmin(admin.ModelAdmin):
 class UserSavingGoalAdmin(admin.ModelAdmin):
     list_display = ['user', 'title', 'target_amount', 'current_saved', 'is_active']
     list_filter = ['is_active']
+
+@admin.register(SavingScenario)
+class SavingScenarioAdmin(admin.ModelAdmin):
+    list_display = ("user", "category", "target_percent", "is_active", "created_at")
+    list_filter = ("is_active", "category")
+    search_fields = ("user__email",)
